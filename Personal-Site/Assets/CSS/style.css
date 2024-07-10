@@ -1,0 +1,159 @@
+html {
+    overflow: hidden;
+}
+
+#title, #headshot .vert_line {
+    display: inline-block;
+    vertical-align: middle;
+    top: 0;
+}
+
+#header {
+    font-family: 'Rockwell', serif;
+}
+
+#title {
+    margin-top: 3%;
+    margin-left: 10%;
+    font-size: 6vw;
+    color:black;
+}
+
+#headshot {
+    width: 20%;
+    position: absolute;
+    right: 0;
+    outline: rgb(12, 12, 82) solid 5px;
+    border-radius: 10%;
+    margin-right: 10%;
+    margin-top: 1.5%;
+}
+
+#email, #phone_number, #linked_in {
+    position: static; /* Remove absolute positioning */
+    margin-top: 0; /* Resetting margins if necessary */
+    font-size: 1.8vw; /* Adjust font size as needed */
+}
+
+#linked_in {
+    width: 2vw;
+    margin-top: -10px;
+}
+
+#contacts {
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 61%;
+}
+
+#header_line {
+    width: 100%;
+    margin-top: 2.5vw;
+    border-top: 3px dotted rgb(12, 12, 82) ;
+}
+
+.body_text {
+    font-family: 'Rockwell';
+    position: relative;
+    margin: 0 auto;
+    font-size: 1.5vw;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-top: 0.3vw;  
+}
+
+.bottom_images {
+    width: 100%;
+    height: 220px !important;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Type Writer Animation */
+.type_writer {
+    border-right: 2px solid rgb(12, 12, 82);
+    animation: typewriter1 8s steps(100) 1 normal both,
+             hideBorder 50ms 8s 1 normal both;
+}
+
+.type_writer2 {
+    border-right: 2px solid rgb(12, 12, 82);
+    margin-top: 1vw;
+    animation:  typewriter2 7s steps(80) 1 normal both,
+                hideBorder 50ms 7s 1 normal both;
+}
+
+.type_writer3 {
+    border-right: 2px solid rgb(12, 12, 82);
+    margin-top: 1vw;
+    animation:  typewriter3 8s steps(90) 1 normal both,
+                hideBorder 50ms 8s 1 normal both;
+}
+
+.type_writer4 {
+    border-right: 2px solid rgb(12, 12, 82);
+    margin-top: 1vw;
+    animation:  typewriter4 7s steps(70) 1 normal both,
+                hideBorder 50ms 7s 1 normal both;
+}
+
+.type_writer5 {
+    border-right: 2px solid rgb(12, 12, 82);
+    margin-top: 1vw;
+    animation:  typewriter5 6s steps(70) 1 normal both,
+                hideBorder 50ms 6s 1 normal both;
+}
+
+.type_writer6 {
+    border-right: 2px solid rgb(12, 12, 82);
+    margin-top: 1vw;
+    animation:  typewriter6 3s steps(50) 1 normal both,
+                hideBorder 50ms 3s 1 normal both;
+}
+
+@keyframes typewriter1{
+    from{width: 0;}
+    to{width: 54.5em;}
+}
+
+@keyframes typewriter2{
+    from{width: 0;}
+    to{width: 45em;}
+}
+
+@keyframes typewriter3{
+    from{width: 0;}
+    to{width: 56em;}
+}
+
+@keyframes typewriter4{
+    from{width: 0;}
+    to{width: 55em;}
+}
+
+@keyframes typewriter5{
+    from{width: 0;}
+    to{width: 46em;}
+}
+
+@keyframes typewriter6{
+    from{width: 0;}
+    to{width: 17em;}
+}
+
+@keyframes blinkTextCursor{
+    from{border-right-color: rgb(12, 12, 82);}
+    to{border-right-color: transparent;}
+}
+
+@keyframes hideBorder {
+    from { border-right-color: rgb(12, 12, 82); }
+    to { border-right-color: transparent; }
+}
+
+
+
+
