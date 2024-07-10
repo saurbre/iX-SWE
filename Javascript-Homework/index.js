@@ -1,8 +1,9 @@
 function triangleArea(sides) {
     if (sides.length != 3) {
         console.log("Error");
+        return null;
     }
-    else {
+    else { // Heron's Formula
         const [a, b, c] = sides;
         const s = (a + b + c) / 2;
         const area = Math.sqrt(s * (s - a) * (s - b) * (s - c));
