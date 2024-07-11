@@ -13,3 +13,8 @@ function triangleArea(sides) {
 
 let sides = [4, 5, 6];
 console.log(triangleArea(sides));
+
+// Fib
+function fib() {
+    // TODO
+}
