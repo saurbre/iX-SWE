@@ -1,13 +1,14 @@
 import React from 'react'
 import "./index.css";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg">
       <div style={{ margin: "0px 5%" }} className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <Link className="navbar-brand" to="/">
           iX Software Engineering Blog
-        </a>
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -22,14 +23,19 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="../../pages/HomePage">
+              <Link className="nav-link active" aria-current="page" to="/">
                 Home
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="../../pages/Blogs">
+              <Link className="nav-link active" aria-current="page" to="/blogs">
                 Blogs
-              </a>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link active" aria-current="page" to="/categories">
+                Categories
+              </Link>
             </li>
           </ul>
         </div>
