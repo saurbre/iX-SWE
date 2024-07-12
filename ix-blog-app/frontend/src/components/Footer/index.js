@@ -13,12 +13,12 @@ export default function Footer() {
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="../Categories" className="nav-link px-2 text-muted">
+            <Link to="#" className="nav-link px-2 text-muted">
               Categories
             </Link>
           </li>
           <li className="../BlogGrid">
-            <Link to="../BlogGrid" className="nav-link px-2 text-muted">
+            <Link to="#" className="nav-link px-2 text-muted">
               Blogs
             </Link>
           </li>
