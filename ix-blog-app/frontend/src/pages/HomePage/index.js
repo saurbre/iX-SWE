@@ -1,11 +1,11 @@
 import React from "react";
 
-import Heading from "../Heading";
-import Navbar from "../Navbar";
-import BlogGrid from "../BlogGrid";
-import Footer from "../Footer";
-import SubHeading from "../SubHeading";
-import CategoryList from "../CategoryList";
+import Heading from "../../components/Heading";
+import Navbar from "../../components/Navbar";
+import BlogGrid from "../../components/BlogGrid";
+import Footer from "../../components/Footer";
+import SubHeading from "../../components/SubHeading";
+import CategoryList from "../../components/CategoryList";
 
 // Week 1: Import the blogPosts and categories from the dummy-data.json file
 const data = require("../../dummy-data.json");

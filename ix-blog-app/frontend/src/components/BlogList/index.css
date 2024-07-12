@@ -1,0 +1,11 @@
+#blog-item {
+    width: 30%;
+    display: inline-flex;
+    margin: 15px 10px;
+}
+
+.blog-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
