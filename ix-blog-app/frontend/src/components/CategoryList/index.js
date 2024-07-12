@@ -20,6 +20,7 @@ export default function CategoryList({ categories }) {
                 backgroundColor: category.color + "33",
                 position: "relative",
                 zIndex: 0,
+                width: "100%",
               }}
             >
               <h5 className="card-title">{category.title}</h5>

@@ -6,7 +6,8 @@
   
   .card-1:hover {
     cursor: pointer;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 0px 15px rgba(255, 182, 193, 0.5);
+    transform: scale(1.03);
   }
   
   .card-2 {
@@ -18,7 +19,8 @@
   
   .card-2:hover {
     cursor: pointer;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 0px 15px rgba(255, 182, 193, 0.5);
+    transform: scale(1.03);
   }
   
   .card-img-top {
