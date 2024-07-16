@@ -9,3 +9,10 @@
     flex-wrap: wrap;
     justify-content: center;
 }
+
+@media (max-width: 1000px) {
+    #blog-item {
+        width: 100%;
+        justify-content: center;
+    }
+}

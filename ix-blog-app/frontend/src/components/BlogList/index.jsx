@@ -1,29 +1,21 @@
 import React from "react";
-import PropTypes from "prop-types";
-import "./index.css";
 import BlogItem from "../BlogItem";
+import "./index.css";
 
-export default function BlogList({ blogPosts }) {
+export default function BlogList({ blogs }) {
+  if (!blogs || !blogs.length) {
+    return null;
+  }
+
   return (
     <div className="blog-list">
-      {blogPosts.map((blogPost, index) => {
+      {blogs?.map((blog, index) => {
         return (
-          <div
-            key={index}
-            id="blog-item"
-          >
-            <BlogItem
-              index={index}
-              blogPost={blogPost}
-              imageOrientation={"top"}
-            />
+          <div key={index} id="blog-item">
+            <BlogItem blog={blog} imageOrientation={"top"} />
           </div>
         );
       })}
     </div>
   );
 }
-
-BlogList.propTypes = {
-  blogPosts: PropTypes.array.isRequired,
-};

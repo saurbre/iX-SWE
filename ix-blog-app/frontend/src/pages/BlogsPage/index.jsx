@@ -1,54 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import Navbar from "../../components/Navbar";
 import Heading from "../../components/Heading";
 import BlogList from "../../components/BlogList";
 import Footer from "../../components/Footer";
-import { useEffect } from "react";
+import CategoriesScrollList from "../../components/CategoriesScrollList";
 
-import "../../App.css";
 import "./index.css";
 
-// Importing dummy data
 const data = require("../../dummy-data.json");
-let blogPosts = data.blogPosts;
+const blogsData = data.blogPosts.reverse();
 const categories = data.categories;
 
 export default function BlogsPage() {
-  //Initializing our states:
-  const [categoryId, setCategoryId] = useState();
-  const [blogs, setBlogs] = useState([]);
+  const { categoryId } = useParams();
 
-  // Effect to filter blogs based on selected category
+  const [displayCategoryId, setDisplayCategoryId] = useState(
+    categoryId && parseInt(categoryId)
+  );
+  const [blogs, setBlogs] = useState(blogsData);
+
   useEffect(() => {
-    if (categoryId) {
-      setBlogs(blogPosts.filter(blog => blog.categoryId === categoryId));
-    } else {
-      setBlogs(blogPosts);
-    }
-  }, [categoryId]);
-
-  const CategoriesList = () => {
-    return categories.map((category, index) => {
-      return categoryId === category.id.toString() ? (
-        <button
-          key={index}
-          onClick={() => setCategoryId(category.id)}
-          style={{ color: "blue" }}
-        >
-          <p key={index}>{category.title}</p>
-        </button>
-      ) : (
-        <button
-          key={index}
-          onClick={() => setCategoryId(category.id)}
-          style={{ color: "black" }}
-        >
-          <p key={index}>{category.title}</p>
-        </button>
-      );
-    });
-  };
+    const filteredBlogs = blogsData.filter((blog) =>
+      blog.categories.some((category) =>
+        displayCategoryId === undefined
+          ? true
+          : category.id === displayCategoryId
+      )
+    );
+    setBlogs(filteredBlogs);
+  }, [displayCategoryId]);
 
   return (
     <>
@@ -56,12 +38,16 @@ export default function BlogsPage() {
       <div className="container">
         <Heading />
         <div className="scroll-menu">
-          <CategoriesList />
+          <CategoriesScrollList
+            categories={categories}
+            categoryId={categoryId}
+            setCategoryId={setDisplayCategoryId}
+          />
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <p className="page-subtitle">Blog Posts</p>
         </div>
-        <BlogList blogPosts={blogPosts} />
+        <BlogList blogs={blogs} />
       </div>
       <Footer />
     </>

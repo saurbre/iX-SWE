@@ -1,9 +1,11 @@
 import React from "react";
 
-export default function Categories({ blogPost }) {
+import "./index.css";
+
+export default function Categories({ blog }) {
   return (
     <div className="flex-wrap">
-      {blogPost.categories.map((category, index) => {
+      {blog.categories.map((category, index) => {
         return (
           <p
             key={index}
