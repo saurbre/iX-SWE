@@ -4,25 +4,42 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import Categories from "../../components/Categories";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+import Loader from "../../components/Loader";
+
+import blogsService from "../../services/blogsService";
 
 import "./index.css";
 
-const data = require("../../dummy-data.json");
-const blogsData = data.blogPosts.reverse();
+// const data = require("../../dummy-data.json");
+// const blogsData = data.blogPosts.reverse();
 
 export default function BlogPage() {
   const { blogId } = useParams();
   const navigate = useNavigate();
   const [blog, setBlog] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const blogRes = blogsData.find((blog) => blog.id === parseInt(blogId));
-    setBlog(blogRes);
+    async function fetchBlog() {
+      setLoading(true);
+      try {
+        const blogRes = await blogsService.getBlogById(blogId);
+        setBlog(blogRes.data);
+      } catch (err) {
+        console.error(err);
+      }
+      setLoading(false);
+    }
+    fetchBlog();
   }, [blogId]);
 
   const navigateToAuthorProfile = () => {
     navigate("/profile");
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   if (!blog) {
     return null;
