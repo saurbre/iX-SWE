@@ -14,6 +14,10 @@ router.get("/:blogId", (req, res) => {
     blogsController.getBlogsById(req, res);
 });
 
+router.get("/category/:categoryId", (req, res) => {
+    blogsController.getBlogsByCategoryId(req, res);
+});
+
 router.put("/:blogId", (req, res) => {
     blogsController.updateBlogsById(req, res);
 });

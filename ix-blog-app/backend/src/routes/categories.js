@@ -10,10 +10,6 @@ router.get("/", (req, res) => {
     categoriesController.getCategories(req, res);
 });
 
-router.get("/:categoryId", (req, res) => {
-    categoriesController.getCategoryById(req, res);
-});
-
 router.put("/:categoryId", (req, res) => {
     categoriesController.updateCategoryById(req, res);
 });

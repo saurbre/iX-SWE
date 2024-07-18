@@ -1,7 +1,7 @@
 const getCategories = async () => {
     try {
       const data = await fetch(
-        "https://ix-blog-app-2d5c689132cd.herokuapp.com/api/categories"
+        "http://localhost:8000/api/categories"
       );
       if (!data.ok) {
         console.log(data.statusText);
