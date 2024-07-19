@@ -1,50 +1,139 @@
-const getBlogs = async () => {
-    try {
-        const data = await fetch("http://localhost:8000/api/blogs");
-        if (!data.ok) {
-            console.log(data.statusText);
-            throw Error(data.statusText);
-        }
-        const res = await data.json();
-        return res;
-    } catch (err) {
-        throw Error(err);
+const createBlog = async (blog) => {
+    const response = await fetch("http://localhost:8000/api/blogs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(blog),
+    });
+  
+    if (!response.ok) {
+      let res = await response.json();
+      throw res;
     }
+  
+    const responseData = await response.json();
+    return responseData;
 };
 
-const getBlogsByCategoryID = async (id) => {
-    let categoryIdReq = id ? id : null;
-    try {
-        const data = await fetch(`http://localhost:8000/api/blogs/category/` + categoryIdReq);
-        if (!data.ok) {
-            console.log(data.statusText);
-            throw Error(data.statusText);
-        }
-        const res = await data.json();
-        return res;
-    } catch (err) {
-        throw Error(err);
+const fetchBlogs = async () => {
+    const response = await fetch("http://localhost:8000/api/blogs", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  
+    if (!response.ok) {
+      let res = await response.json();
+      throw res;
     }
+  
+    const responseData = await response.json();
+    return responseData;
 };
 
-const getBlogById = async (id) => {
-    try {
-      const data = await fetch(`http://localhost:8000/api/blogs/${id}`);
-      if (!data.ok) {
-        console.log(data.statusText);
-        throw Error(data.statusText);
+const fetchBlogsByCategoryId = async (categoryId) => {
+    const response = await fetch(
+      "http://localhost:8000/api/blogs/category/" + categoryId,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-      const res = await data.json();
-      return res;
-    } catch (err) {
-      throw Error(err);
+    );
+  
+    if (!response.ok) {
+      let res = await response.json();
+      throw res;
     }
+  
+    const responseData = await response.json();
+    return responseData;
 };
 
-const blogsService = {
-    getBlogs,
-    getBlogsByCategoryID,
-    getBlogById,
+const fetchBlogById = async (id) => {
+    const response = await fetch("http://localhost:8000/api/blogs/" + id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  
+    if (!response.ok) {
+      let res = await response.json();
+      throw res;
+    }
+  
+    const responseData = await response.json();
+    return responseData;
 };
+
+const fetchBlogsByAuthorId = async (authorId) => {
+    const response = await fetch(
+      "http://localhost:8000/api/blogs/author/" + authorId,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  
+    if (!response.ok) {
+      let res = await response.json();
+      throw res;
+    }
+  
+    const responseData = await response.json();
+    return responseData;
+};
+
+const updateBlog = async (blog) => {
+    const response = await fetch("http://localhost:8000/api/blogs/" + blog.id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(blog),
+    });
+  
+    if (!response.ok) {
+      let res = await response.json();
+      throw res;
+    }
+  
+    const responseData = await response.json();
+    return responseData;
+};
+
+const deleteBlogsById = async (id) => {
+    const response = await fetch("http://localhost:8000/api/blogs/" + id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  
+    if (!response.ok) {
+      let res = await response.json();
+      throw res;
+    }
+  
+    const responseData = await response.json();
+    return responseData;
+  };
+
+
+  const blogsService = {
+    createBlog,
+    fetchBlogs,
+    fetchBlogById,
+    fetchBlogsByCategoryId,
+    fetchBlogsByAuthorId,
+    updateBlog,
+    deleteBlogsById,
+  };
 
 export default blogsService;

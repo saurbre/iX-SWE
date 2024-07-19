@@ -18,7 +18,6 @@ const categorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Add a toJSON method to the schema to control the output of category instances
 categorySchema.method("toJSON", function () {
   const { __v, _id, ...object } = this.toObject();
   object.id = _id;

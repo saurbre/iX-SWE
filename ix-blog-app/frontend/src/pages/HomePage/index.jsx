@@ -23,7 +23,7 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const blogRes = await blogsService.getBlogs();
+      const blogRes = await blogsService.fetchBlogs();
       const catRes = await categoriesService.getCategories();
       setBlogs(blogRes.data);
       setCategories(catRes.data);

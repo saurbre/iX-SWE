@@ -23,7 +23,7 @@ export default function BlogPage() {
     async function fetchBlog() {
       setLoading(true);
       try {
-        const blogRes = await blogsService.getBlogById(blogId);
+        const blogRes = await blogsService.fetchBlogById(blogId);
         setBlog(blogRes.data);
       } catch (err) {
         console.error(err);
@@ -68,8 +68,8 @@ export default function BlogPage() {
               {blog.content.map((content, index) => {
                 return (
                   <div key={index} className="my-5">
-                    <h2 className="my-3">{content.sectionHeader}</h2>
-                    <p>{content.sectionText}</p>
+                    <h2 className="my-3">{content.title}</h2>
+                    <p>{content.text}</p>
                   </div>
                 );
               })}

@@ -2,54 +2,75 @@ const Blog = require("../models/blogModel");
 
 const createBlog = async (req, res) => {
   try {
-    // const categoryIds = req.body.categories.map(category=>{return category.blogId});
-    const blog = new Blog ({
-      title:req.body.title,
-      description:req.body.description,
-      image:req.body.image,
-      content:req.body.content,
-      authorId:req.body.authorId,
-      categoryIds:req.body.categoryIds,
+    const categoryIds = req.body.categories.map((category) => {
+      return category.id;
+    });
+    const blog = new Blog({
+      title: req.body.title,
+      description: req.body.description,
+      content: req.body.content,
+      categoryIds: categoryIds,
+      // authorId: req.body.authorId,
+      image: req.body.image,
     });
     const newBlog = await blog.save();
-    res.status(201).json({ message: "Blog created!", data: newBlog });
+    const blogRes = await Blog.findById(newBlog._id).populate({
+      path: "categoryIds",
+    });
+    res.status(201).json({ message: "Created blog!", data: blogRes });
   } catch (error) {
-    res.status(500).json({ message: "Error creating blog", error: error });
+    const message = error?.message ? error.message : "Internal server error";
+    res.status(500).json({ message });
   }
 };
 
 const getBlogs = async (req, res) => {
   try {
-    const blogsRed = await Blog.find();
-    res.status(200).json({ message: "Return all blogs!", data: blogsRed });
+    const blogsRed = await Blog.find().populate({
+      path: "categoryIds",
+    });
+    res.status(200).send({ message: "Return all blogs!", data: blogsRed });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching blogs", error: error });
+    const message = error?.message ? error.message : "Internal server error";
+    res.status(500).json({ message });
   }
 };
 
-const getBlogsById = async (req, res) => {
+const getBlogById = async (req, res) => {
   try {
-    const blogsRed = await Blog.findById(req.params.blogid);
-    res.status(200).json({ message: "Return blog by Id!", data: blogsRed });
+    const blogsRed = await Blog.findById(req.params.id).populate({
+      path: "categoryIds",
+    });
+    res.status(200).send({ message: "Return blog by ID!", data: blogsRed });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching blogs", error: error });
+    const message = error?.message ? error.message : "Internal server error";
+    res.status(500).json({ message });
   }
 };
 
-const getBlogsByCategoryId = async (req, res) => {
+const getBlogByCategoryId = async (req, res) => {
   try {
-    const blogsRed = await Blog.find({categoryIds: req.params.categoryId});
-    res.status(200).json({ message: "Return blog by Id!", data: blogsRed });
+    let filter = {};
+    if (req.params.id != "null" && req.params.id != "undefined") {
+      filter = { categoryIds: req.params.id };
+    }
+    const blogsRed = await Blog.find(filter).populate({
+      path: "categoryIds",
+    });
+    res.status(200).send({ message: "Return blog by ID!", data: blogsRed });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching blogs", error: error });
+    const message = error?.message ? error.message : "Internal server error";
+    res.status(500).json({ message });
   }
-}
+};
 
 const updateBlogById = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.params.blogId);
+    const blog = await Blog.findById(req.params.id).populate({
+      path: "categoryIds",
+    });
     if (blog) {
-      blog.authorId = req?.body?.authorId || blog.authorId;
+      // blog.authorId = req?.body?.authorId || blog.authorId;
       blog.categoryIds = req?.body?.categoryIds || blog.categoryIds;
       blog.title = req?.body?.title || blog.title;
       blog.description = req?.body?.description || blog.description;
@@ -61,28 +82,30 @@ const updateBlogById = async (req, res) => {
       res.status(404).json({ message: "Blog not found!" });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message, data: [] });
+    const message = error?.message ? error.message : "Internal server error";
+    res.status(500).json({ message });
   }
 };
 
 const deleteBlogById = async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndDelete(req.params.blogId);
-    if (blog) {
+    const dbResponse = await Blog.findByIdAndDelete(req.params.id);
+    if (dbResponse) {
       return res.status(200).json({ message: "Blog deleted!" });
     } else {
       return res.status(404).json({ message: "Blog not found!" });
     }
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    const message = error?.message ? error.message : "Internal server error";
+    res.status(500).json({ message });
   }
 };
 
 module.exports = {
   createBlog,
   getBlogs,
-  getBlogsById,
-  getBlogsByCategoryId,
+  getBlogById,
+  getBlogByCategoryId,
   updateBlogById,
   deleteBlogById,
 };

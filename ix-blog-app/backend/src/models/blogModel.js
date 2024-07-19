@@ -2,13 +2,20 @@ const mongoose = require("mongoose");
 
 const blogSchema = new mongoose.Schema(
   {
-    authorId: {
-      type: String,
-      required: true,
+    author: {
+      type: Object,
+      default: {
+        firstName: "Byron",
+        lastName: "de Villiers",
+        email: "byron@mail.com",
+        bio: "Lorem Ipsum is simply dummy text of the printing and typesetting indus…",
+        image: "https://storage.googleapis.com/ix-blog-app/download.png",
+      },
     },
     categoryIds: {
-      type: Array,
+      type: [mongoose.Schema.Types.ObjectId],
       required: true,
+      ref: "Category",
     },
     title: {
       type: String,
@@ -20,7 +27,7 @@ const blogSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      default: "https://storage.googleapis.com/ix-blog-app/default/jpeg",
+      default: "https://storage.googleapis.com/ix-blog-app/default.jpeg",
     },
     content: {
       type: Array,
@@ -30,11 +37,18 @@ const blogSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Add a toJSON method to the schema to control the output of category instances
 blogSchema.method("toJSON", function () {
-    const { __v, _id, ...object } = this.toObject();
-    object.id = _id;
-    return object;
+  const { __v, _id, categoryIds, ...object } = this.toObject();
+  object.id = _id;
+  object.categories = categoryIds.map((category) => {
+    return {
+      id: category._id,
+      title: category.title,
+      description: category.description,
+      color: category.color,
+    };
+  });
+  return object;
 });
 
 module.exports = mongoose.model("Blog", blogSchema);
