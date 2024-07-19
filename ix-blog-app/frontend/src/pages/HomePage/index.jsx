@@ -10,24 +10,31 @@ import Loader from "../../components/Loader";
 
 import blogsService from "../../services/blogsService";
 import categoriesService from "../../services/categoryService";
-
-// const data = require("../../dummy-data.json");
-// const blogs = data.blogPosts.reverse();
-// const categories = data.categories;
+import SuccessToast from "../../components/SuccessToast";
+import ErrorToast from "../../components/ErrorToast";
 
 export default function HomePage() {
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSuccess, setIsSuccess] = useState();
+  const [isError, setIsError] = useState();
+  const [message, setMessage] = useState();
 
   useEffect(() => {
     async function fetchData() {
-      setLoading(true);
-      const blogRes = await blogsService.fetchBlogs();
-      const catRes = await categoriesService.getCategories();
-      setBlogs(blogRes.data);
-      setCategories(catRes.data);
-      setLoading(false);
+      try {
+        setLoading(true);
+        const blogRes = await blogsService.fetchBlogs();
+        const catRes = await categoriesService.getCategories();
+        setBlogs(blogRes.data);
+        setCategories(catRes.data);
+        setLoading(false);
+      } catch (error) {
+        setIsError(true);
+        setMessage(error);
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);
@@ -46,6 +53,20 @@ export default function HomePage() {
         <Subheading subHeading={"Categories"} />
         <CategoriesList categories={categories} />
         <Footer />
+        <SuccessToast
+          show={isSuccess}
+          message={message}
+          onClose={() => {
+            setIsSuccess(false);
+          }}
+        />
+        <ErrorToast
+          show={isError}
+          message={message}
+          onClose={() => {
+            setIsError(false);
+          }}
+        />
       </div>
     </>
   );

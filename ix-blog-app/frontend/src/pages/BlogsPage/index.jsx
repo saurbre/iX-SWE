@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import Navbar from "../../components/Navbar";
 import Heading from "../../components/Heading";
@@ -8,8 +8,12 @@ import Footer from "../../components/Footer";
 import CategoriesScrollList from "../../components/CategoriesScrollList";
 import Loader from "../../components/Loader";
 
+import AddEditBlogModal from "../../components/AddEditBlogModal";
+
 import blogsService from "../../services/blogsService";
 import categoriesService from "../../services/categoryService";
+import SuccessToast from "../../components/SuccessToast";
+import ErrorToast from "../../components/ErrorToast";
 
 import "./index.css";
 
@@ -18,29 +22,36 @@ import "./index.css";
 // const categories = data.categories;
 
 export default function BlogsPage() {
-  const { categoryId } = useParams();
-
-  const [displayCategoryId, setDisplayCategoryId] = useState(
-    categoryId && parseInt(categoryId)
-  );
+  const { categoryId: initialCategoryId } = useParams();
+  const [categoryId, setCategoryId] = useState(initialCategoryId);
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSuccess, setIsSuccess] = useState();
+  const [isError, setIsError] = useState();
+  const [message, setMessage] = useState();
 
   useEffect(() => {
     async function fetchData() {
-      setLoading(true);
-      const blogRes = await blogsService.fetchBlogsByCategoryId(displayCategoryId);
-      const catRes = await categoriesService.getCategories();
-      setBlogs(blogRes.data);
-      setCategories(catRes.data);
-      setLoading(false);
+      try {
+        setLoading(true);
+        const blogRes = await blogsService.fetchBlogsByCategoryId(categoryId);
+        const catRes = await categoriesService.getCategories();
+        setBlogs(blogRes.data);
+        setCategories(catRes.data);
+        setLoading(false);
+      } catch (error) {
+        setIsError(true);
+        setMessage(error.message);
+        setLoading(false);
+      }
     }
     fetchData();
-  }, [displayCategoryId]);
+  }, [categoryId]);
 
-  if(loading) {
-    return <Loader />
+
+  if (loading) {
+    return <Loader />;
   }
 
   return (
@@ -52,7 +63,7 @@ export default function BlogsPage() {
           <CategoriesScrollList
             categories={categories}
             categoryId={categoryId}
-            setCategoryId={setDisplayCategoryId}
+            setCategoryId={setCategoryId}
           />
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -61,6 +72,20 @@ export default function BlogsPage() {
         <BlogList blogs={blogs} />
       </div>
       <Footer />
+      <SuccessToast
+        show={isSuccess}
+        message={message}
+        onClose={() => {
+          setIsSuccess(false);
+        }}
+      />
+      <ErrorToast
+        show={isError}
+        message={message}
+        onClose={() => {
+          setIsError(false);
+        }}
+      />
     </>
   );
 }

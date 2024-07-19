@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import PropType from "prop-types";
 
@@ -7,11 +8,15 @@ export default function CategoriesScrollList({
   categoryId,
   setCategoryId,
 }) {
+  const navigate = useNavigate();
   return categories.map((category, index) => {
-    return categoryId == category.id.toString() ? (
+    return categoryId === category.id ? (
       <button
         key={index}
-        onClick={() => setCategoryId(category.id)}
+        onClick={() => {
+          navigate("/blogs");
+          setCategoryId(null);
+        }}
         style={{ color: "blue" }}
       >
         <p key={index}>{category.title}</p>
@@ -20,6 +25,7 @@ export default function CategoriesScrollList({
       <button
         key={index}
         onClick={() => {
+          navigate(`/blogs/${category.id}`);
           setCategoryId(category.id);
         }}
         style={{ color: "black" }}
