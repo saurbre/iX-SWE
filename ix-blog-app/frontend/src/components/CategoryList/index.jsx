@@ -1,13 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import "./index.css";
+import EditButtons from "../EditButtons";
 
-export default function CategoriesList({ categories }) {
+export default function CategoriesList({ categories, onEdit, onDelete }) {
   const navigate = useNavigate();
   const navigateToBlog = (categoryId) => {
     navigate("/blogs/" + categoryId);
   };
+
   return (
     <div className="category-list">
       {categories.map((category) => {
@@ -36,9 +39,24 @@ export default function CategoriesList({ categories }) {
                 {category.description.substring(0, 100)} ...
               </p>
             </div>
+            {onEdit && onDelete && (
+              <EditButtons onEdit={()=>{
+                onEdit(category);
+              }} onDelete={()=>{
+                onDelete(category);
+              }} onNavigate={()=>{
+                navigateToBlog(category.id);
+              }} />
+            )}
           </button>
         );
       })}
     </div>
   );
 }
+
+CategoriesList.prototype = {
+  categories: PropTypes.array.isRequired,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
+};

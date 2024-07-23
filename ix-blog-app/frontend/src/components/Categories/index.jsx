@@ -1,8 +1,12 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import "./index.css";
 
-export default function Categories({ blog }) {
+export default function Categories({ blog, removeCategory }) {
+  if (!blog) {
+    return null;
+  }
   return (
     <div className="flex-wrap">
       {blog.categories.map((category, index) => {
@@ -16,9 +20,22 @@ export default function Categories({ blog }) {
             }}
           >
             {category.title}
+
+            {removeCategory && (
+              <i
+                onClick={() => {
+                  removeCategory(category);
+                }}
+                className="bi bi-x"
+              ></i>
+            )}
           </p>
         );
       })}
     </div>
   );
 }
+
+Categories.prototype = {
+  blog: PropTypes.object.isRequired,
+};

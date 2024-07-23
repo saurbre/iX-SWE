@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import "./index.css";
 import BlogItem from "../BlogItem";
@@ -39,3 +40,7 @@ export default function BlogGrid({ blogs }) {
     </>
   );
 }
+
+BlogGrid.prototype = {
+  blogs: PropTypes.array.isRequired,
+};

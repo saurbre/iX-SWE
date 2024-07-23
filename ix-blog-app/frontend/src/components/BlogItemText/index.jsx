@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import "./index.css";
 
@@ -30,3 +31,8 @@ export default function BlogItemText({ headerFontSize, blog }) {
     </div>
   );
 }
+
+BlogItemText.prototype = {
+  headerFontSize: PropTypes.string.isRequired,
+  blog: PropTypes.object.isRequired,
+};

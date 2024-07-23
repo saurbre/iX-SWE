@@ -63,3 +63,7 @@
       margin-left: 0;
     }
   }  
+  
+.blog-edit-buttons {
+  background-color: pink !important;
+}
