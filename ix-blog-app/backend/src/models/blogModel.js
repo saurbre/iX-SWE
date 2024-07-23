@@ -3,14 +3,9 @@ const mongoose = require("mongoose");
 const blogSchema = new mongoose.Schema(
   {
     author: {
-      type: Object,
-      default: {
-        firstName: "Byron",
-        lastName: "de Villiers",
-        email: "byron@mail.com",
-        bio: "Lorem Ipsum is simply dummy text of the printing and typesetting indus…",
-        image: "https://storage.googleapis.com/ix-blog-app/download.png",
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
     },
     categoryIds: {
       type: [mongoose.Schema.Types.ObjectId],
@@ -38,9 +33,10 @@ const blogSchema = new mongoose.Schema(
 );
 
 blogSchema.method("toJSON", function () {
-  const { __v, _id, categoryIds, ...object } = this.toObject();
+  const { __v, _id, categoryIds:categories, author, ...object } = this.toObject();
   object.id = _id;
-  object.categories = categoryIds.map((category) => {
+  object.author = author;
+  object.categories = categories.map((category) => {
     return {
       id: category._id,
       title: category.title,

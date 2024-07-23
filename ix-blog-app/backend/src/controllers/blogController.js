@@ -14,8 +14,12 @@ const createBlog = async (req, res) => {
       image: req.body.image,
     });
     const newBlog = await blog.save();
-    const blogRes = await Blog.findById(newBlog._id).populate({
+    const blogRes = await Blog.findById(newBlog._id)
+    .populate({
       path: "categoryIds",
+    })
+    .populate({
+      path: "author",
     });
     res.status(201).json({ message: "Created blog!", data: blogRes });
   } catch (error) {
@@ -38,8 +42,12 @@ const getBlogs = async (req, res) => {
 
 const getBlogById = async (req, res) => {
   try {
-    const blogsRed = await Blog.findById(req.params.id).populate({
+    const blogsRed = await Blog.findById(req.params.id)
+    .populate({
       path: "categoryIds",
+    })
+    .populate({
+      path: "author",
     });
     res.status(200).send({ message: "Return blog by ID!", data: blogsRed });
   } catch (error) {
@@ -56,6 +64,9 @@ const getBlogByCategoryId = async (req, res) => {
     }
     const blogsRed = await Blog.find(filter).populate({
       path: "categoryIds",
+    })
+    .populate({
+      path: "author",
     });
     res.status(200).send({ message: "Return blog by ID!", data: blogsRed });
   } catch (error) {
@@ -68,6 +79,9 @@ const updateBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id).populate({
       path: "categoryIds",
+    })
+    .populate({
+      path: "author",
     });
     if (blog) {
       // blog.authorId = req?.body?.authorId || blog.authorId;
