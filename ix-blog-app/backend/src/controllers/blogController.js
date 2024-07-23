@@ -10,7 +10,7 @@ const createBlog = async (req, res) => {
       description: req.body.description,
       content: req.body.content,
       categoryIds: categoryIds,
-      // authorId: req.body.authorId,
+      author: req.body.author,
       image: req.body.image,
     });
     const newBlog = await blog.save();
