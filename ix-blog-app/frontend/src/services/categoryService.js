@@ -17,6 +17,7 @@ const createCategory = async (category) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
     },
     body: JSON.stringify(category),
   });
@@ -43,6 +44,7 @@ const updateCategory = async (category) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
       },
       body: JSON.stringify(category),
     }
@@ -68,6 +70,7 @@ const deleteCategory = async (id) => {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
     },
   });
 

@@ -35,7 +35,14 @@ const blogSchema = new mongoose.Schema(
 blogSchema.method("toJSON", function () {
   const { __v, _id, categoryIds:categories, author, ...object } = this.toObject();
   object.id = _id;
-  object.author = author;
+  object.author = {
+    id: author._id,
+    firstName: author.firstName,
+    lastName: author.lastName,
+    email: author.email,
+    image: author.image,
+    bio: author.bio,
+  };
   object.categories = categories.map((category) => {
     return {
       id: category._id,
@@ -44,6 +51,19 @@ blogSchema.method("toJSON", function () {
       color: category.color,
     };
   });
+
+  // Add author details to the blog object
+  if (author && author._id) {
+    object.author = {
+      id: author._id,
+      firstName: author.firstName,
+      lastName: author.lastName,
+      email: author.email,
+      image: author.image,
+      bio: author.bio,
+    }
+  }
+
   return object;
 });
 

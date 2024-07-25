@@ -15,7 +15,7 @@ export default function AddEditBlogModal({
   onClose,
 }) {
   const [blog, setBlog] = useState();
-
+  const user = JSON.parse(localStorage.getItem("user"));
   const modalEl = document.getElementById("addEditModal");
 
   const addEditModal = useMemo(() => {
@@ -25,10 +25,10 @@ export default function AddEditBlogModal({
   useEffect(() => {
     if (addBlog) {
       setBlog(addBlog);
-      addEditModal.show();
+      addEditModal?.show();
     } else if (editBlog) {
       setBlog(editBlog);
-      addEditModal.show();
+      addEditModal?.show();
     }
   }, [addBlog, editBlog, addEditModal]);
 
@@ -51,7 +51,7 @@ export default function AddEditBlogModal({
       description: "",
       categories: [],
       content: [],
-      authorId: "",
+      authorId: user?.id,
     });
   };
 

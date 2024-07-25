@@ -2,6 +2,7 @@ const Blog = require("../models/blogModel");
 
 const createBlog = async (req, res) => {
   try {
+    const user = req.user;
     const categoryIds = req.body.categories.map((category) => {
       return category.id;
     });
@@ -12,6 +13,7 @@ const createBlog = async (req, res) => {
       categoryIds: categoryIds,
       author: req.body.author,
       image: req.body.image,
+      author: user
     });
     const newBlog = await blog.save();
     const blogRes = await Blog.findById(newBlog._id)

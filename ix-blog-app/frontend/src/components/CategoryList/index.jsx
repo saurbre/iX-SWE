@@ -7,6 +7,7 @@ import EditButtons from "../EditButtons";
 
 export default function CategoriesList({ categories, onEdit, onDelete }) {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"))
   const navigateToBlog = (categoryId) => {
     navigate("/blogs/" + categoryId);
   };
@@ -39,7 +40,7 @@ export default function CategoriesList({ categories, onEdit, onDelete }) {
                 {category.description.substring(0, 100)} ...
               </p>
             </div>
-            {onEdit && onDelete && (
+            {user && user.token && onEdit && onDelete && (
               <EditButtons onEdit={()=>{
                 onEdit(category);
               }} onDelete={()=>{

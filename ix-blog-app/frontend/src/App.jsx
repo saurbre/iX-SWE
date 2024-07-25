@@ -15,6 +15,8 @@ import BlogsPage from "./pages/BlogsPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import BlogPage from "./pages/BlogPage";
 import ProfilePage from "./pages/ProfilePage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 const routes = [
   {
@@ -40,6 +42,14 @@ const routes = [
   {
     path: "/profile",
     element: <ProfilePage />,
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/register",
+    element: <RegisterPage />,
   },
 ];
 

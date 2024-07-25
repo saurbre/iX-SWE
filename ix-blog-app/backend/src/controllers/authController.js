@@ -1,5 +1,12 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    // expiresIn: "1d",
+  });
+};
 
 const register = async (req, res) => {
     try {
@@ -29,6 +36,7 @@ const register = async (req, res) => {
       // save user
       const newUser = await user.save();
       let resUser = newUser.toJSON();
+      resUser.token = generateToken(resUser._id);
       delete resUser.password;
       res.status(201).json({ message: "New user created!", data: resUser });
     } catch (error) {
@@ -57,6 +65,7 @@ const login = async (req, res) => {
         return;
       }
       let resUser = user.toJSON();
+      resUser.token = generateToken(resUser._id);
       delete resUser.password;
       res.status(200).json({ message: "Login successful!", data: resUser });
     } catch (error) {

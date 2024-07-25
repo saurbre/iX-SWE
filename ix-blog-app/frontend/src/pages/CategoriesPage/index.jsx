@@ -24,6 +24,8 @@ export default function CategoriesPage() {
   const [isSuccess, setIsSuccess] = useState();
   const [isError, setIsError] = useState();
 
+  const user = JSON.parse(localStorage.getItem("user"))
+
   useEffect(() => {
     const fetchPageData = async () => {
       try {
@@ -101,6 +103,7 @@ export default function CategoriesPage() {
   };
 
   const AddButton = () => {
+    if(!user?.token) return null;
     return (
       <button className="btn btn-outline-dark h-75" onClick={onCategoryAdd}>
         ADD CATEGORY

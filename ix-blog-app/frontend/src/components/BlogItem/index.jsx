@@ -15,6 +15,7 @@ export default function BlogItem({
   onBlogDelete,
 }) {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"))
   const navigateToBlog = () => {
     navigate("/blog/" + blog.id);
   };
@@ -38,7 +39,7 @@ export default function BlogItem({
         <img src={blog.image} className="card-img-top" alt="..." />
         <div className="card-text-bottom">
           <BlogItemText blog={blog} headerFontSize="20px"></BlogItemText>
-          {onBlogEdit && onBlogDelete ? <EditButtonsContainer /> : null}
+          {user && user.token && onBlogEdit && onBlogDelete ? <EditButtonsContainer /> : null}
         </div>
       </div>
     );
@@ -48,7 +49,7 @@ export default function BlogItem({
         <img src={blog.image} className="card-img-left" alt="..." />
         <div className="card-text-right">
           <BlogItemText blog={blog} headerFontSize="20px"></BlogItemText>
-          {onBlogEdit && onBlogDelete ? <EditButtonsContainer /> : null}
+          {user && user.token && onBlogEdit && onBlogDelete ? <EditButtonsContainer /> : null}
         </div>
       </div>
     );

@@ -35,6 +35,8 @@ export default function BlogsPage() {
   const [editBlog, setEditBlog] = useState(null);
   const [deleteBlog, setDeleteBlog] = useState(null);
 
+  const user = JSON.parse(localStorage.getItem("user"))
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -65,7 +67,7 @@ export default function BlogsPage() {
           sectionText: "",
         },
       ],
-      authorId: "",
+      authorId: user._id,
     });
   };
   const onBlogEdit = (blog) => {
@@ -128,6 +130,7 @@ export default function BlogsPage() {
   };
 
   const AddButton = () => {
+    if(!user?.token) return null;
     return (
       <button className="btn btn-outline-dark h-75" onClick={onBlogAdd}>
         ADD BLOG

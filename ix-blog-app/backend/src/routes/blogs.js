@@ -2,8 +2,9 @@ const express = require("express");
 const blogsController = require("../controllers/blogController");
 
 const router = express.Router();
+const { protect } = require("../middleware/authMiddleware");
 
-router.post("/", (req, res) => {
+router.post("/", protect, (req, res) => {
   blogsController.createBlog(req, res);
 });
 
@@ -19,11 +20,11 @@ router.get("/category/:id", (req, res) => {
   blogsController.getBlogByCategoryId(req, res);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", protect, (req, res) => {
   blogsController.updateBlogById(req, res);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", protect, (req, res) => {
   blogsController.deleteBlogById(req, res);
 });
 
