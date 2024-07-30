@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import useBlogs from "../../hooks/useBlogs";
+import "./index.css";
 
+// Services
+import blogsService from "../../services/blogsService";
+import categoriesService from "../../services/categoryService";
+
+// Components
+import SuccessToast from "../../components/SuccessToast";
+import ErrorToast from "../../components/ErrorToast";
+import AddEditBlogModal from "../../components/AddEditBlogModal";
+import DeleteBlogModal from "../../components/DeleteBlogModal";
 import Navbar from "../../components/Navbar";
 import Heading from "../../components/Heading";
 import BlogList from "../../components/BlogList";
@@ -8,125 +19,57 @@ import Footer from "../../components/Footer";
 import CategoriesScrollList from "../../components/CategoriesScrollList";
 import Loader from "../../components/Loader";
 
-
-import blogsService from "../../services/blogsService";
-import categoriesService from "../../services/categoryService";
-import SuccessToast from "../../components/SuccessToast";
-import ErrorToast from "../../components/ErrorToast";
-import AddEditBlogModal from "../../components/AddEditBlogModal";
-import DeleteBlogModal from "../../components/DeleteBlogModal";
-
-import "./index.css";
-
-// const data = require("../../dummy-data.json");
-// const blogsData = data.blogPosts.reverse();
-// const categories = data.categories;
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { 
+  setBlogs, 
+  setAddBlog, 
+  setEditBlog, 
+  setDeleteBlog, 
+  fetchBlogsByCategoryId,
+} from "../../features/blogSlice";
 
 export default function BlogsPage() {
+  const dispatch = useDispatch();
+  const { 
+    blogs, 
+    addBlog, 
+    editBlog, 
+    deleteBlog, 
+    isLoading, 
+    isSuccess, 
+    isError, 
+    message 
+  } = useSelector((state) => state.blogs);
+
+  const { onBlogAdd, createBlog, updateBlog } = useBlogs();
   const { categoryId: initialCategoryId } = useParams();
   const [categoryId, setCategoryId] = useState(initialCategoryId);
-  const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isSuccess, setIsSuccess] = useState();
-  const [isError, setIsError] = useState();
-  const [message, setMessage] = useState();
-  const [addBlog, setAddBlog] = useState(null);
-  const [editBlog, setEditBlog] = useState(null);
-  const [deleteBlog, setDeleteBlog] = useState(null);
 
   const user = JSON.parse(localStorage.getItem("user"))
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        setLoading(true);
-        const blogRes = await blogsService.fetchBlogsByCategoryId(categoryId);
-        const catRes = await categoriesService.getCategories();
-        setBlogs(blogRes.data);
-        setCategories(catRes.data);
-        setLoading(false);
-      } catch (error) {
-        setIsError(true);
-        setMessage(error.message);
-        setLoading(false);
-      }
+      dispatch(fetchBlogsByCategoryId(categoryId));
+      const catRes = await categoriesService.getCategories();
+      setCategories(catRes.data);
     }
     fetchData();
   }, [categoryId]);
 
-  const onBlogAdd = (blog) => {
-    setAddBlog({
-      // image: "",
-      title: "",
-      description: "",
-      categories: [],
-      content: [
-        {
-          sectionHeading: "",
-          sectionText: "",
-        },
-      ],
-      authorId: user._id,
-    });
-  };
   const onBlogEdit = (blog) => {
-    setEditBlog(blog);
+    dispatch(setEditBlog(blog));
   };
   const onBlogDelete = (blog) => {
-    setDeleteBlog(blog);
-  };
-
-  const createBlog = async (blog) => {
-    try {
-      setLoading(true);
-      const blogRes = await blogsService.createBlog(blog);
-      setBlogs([...blogs, blogRes.data]);
-      setAddBlog(null);
-      setMessage(blogRes.message);
-      setIsSuccess(true);
-      setLoading(false);
-    } catch (error) {
-      setMessage(error.message);
-      setIsError(true);
-      setLoading(false);
-    }
-  };
-
-  const updateBlog = async (blog) => {
-    try {
-      setLoading(true);
-      const blogRes = await blogsService.updateBlog(blog);
-      const blogIndex = blogs.findIndex((b) => b.id === blog.id);
-      const updatedBlogs = [...blogs];
-      updatedBlogs[blogIndex] = blogRes.data;
-      setBlogs(updatedBlogs);
-      setEditBlog(null);
-      setMessage("Blog updated successfully");
-      setIsSuccess(true);
-      setLoading(false);
-    } catch (error) {
-      setIsError(true);
-      setMessage(error.message);
-      setLoading(false);
-    }
+    dispatch(setDeleteBlog(blog));
   };
 
   const removeBlog = async (blog) => {
-    try {
-      setLoading(true);
-      await blogsService.deleteBlogsById(blog.id);
-      const updatedBlogs = blogs.filter((b) => b.id !== blog.id);
-      setBlogs(updatedBlogs);
-      setDeleteBlog(null);
-      setMessage("Blog deleted successfully");
-      setIsSuccess(true);
-      setLoading(false);
-    } catch (error) {
-      setIsError(true);
-      setMessage(error.message);
-      setLoading(false);
-    }
+    await blogsService.deleteBlogsById(blog.id);
+    const updatedBlogs = blogs.filter((b) => b.id !== blog.id);
+    dispatch(setBlogs(updatedBlogs));
+    dispatch(setDeleteBlog(null));
   };
 
   const AddButton = () => {
@@ -139,7 +82,7 @@ export default function BlogsPage() {
   };
 
 
-  if (loading) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -170,14 +113,14 @@ export default function BlogsPage() {
         show={isSuccess}
         message={message}
         onClose={() => {
-          setIsSuccess(false);
+          // dispatch(setIsSuccess(false));
         }}
       />
       <ErrorToast
         show={isError}
         message={message}
         onClose={() => {
-          setIsError(false);
+          // dispatch(setIsError(false));
         }}
       />
       <AddEditBlogModal
@@ -187,8 +130,8 @@ export default function BlogsPage() {
         createBlog={createBlog}
         updateBlog={updateBlog}
         onClose={() => {
-          setAddBlog(null);
-          setEditBlog(null);
+          dispatch(setAddBlog(null));
+          dispatch(setEditBlog(null));
         }}
       />
       <DeleteBlogModal
@@ -197,7 +140,7 @@ export default function BlogsPage() {
           removeBlog(deleteBlog);
         }}
         onClose={() => {
-          setDeleteBlog(null);
+          dispatch(setDeleteBlog(null));
         }}
       />
     </>
