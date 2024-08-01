@@ -3,13 +3,13 @@ const Blog = require("../models/blogModel");
 const createBlog = async (req, res) => {
   try {
     const user = req.user;
-    const categoryIds = JSON.parse(req.body.categories).map((category) => {
+    const categoryIds = req.body.categories.map((category) => {
       return category.id;
     });
     const blog = new Blog({
       title: req.body.title,
       description: req.body.description,
-      content: JSON.parse(req.body.content),
+      content: req.body.content,
       categoryIds: categoryIds,
       author: req.body.author,
       image: req.body.image,
