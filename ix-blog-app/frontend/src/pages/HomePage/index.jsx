@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBlogs, reset as resetBlogs } from "../../features/blogSlice";
+import { fetchCategories } from "../../features/categorySlice";
 
 import BlogGrid from "../../components/BlogGrid";
 import CategoriesList from "../../components/CategoryList";
@@ -9,30 +10,30 @@ import Heading from "../../components/Heading";
 import Navbar from "../../components/Navbar";
 import Subheading from "../../components/SubHeading";
 import Loader from "../../components/Loader";
-
-import blogsService from "../../services/blogsService";
-import categoriesService from "../../services/categoryService";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
 
-export default function HomePage() {
-  // const [blogs, setBlogs] = useState([]);
-  const [categories, setCategories] = useState([]);
-  // const [isSuccess, setIsSuccess] = useState();
-  // const [isError, setIsError] = useState();
-  // const [message, setMessage] = useState();
 
+export default function HomePage() {
   const dispatch = useDispatch();
   const {
     blogs,
-    isError,
-    isSuccess,
-    isLoading,
-    message,
+    isError: isBlogsError,
+    isSuccess: isBlogsSuccess,
+    isLoading: isBlogsLoading,
+    message: blogsMessage,
   } = useSelector((state) => state.blogs);
+  const {
+    categories,
+    isLoading: isCategoriesLoading,
+    isError: isCategoriesError,
+    isSuccess: isCategoriesSuccess,
+    message: categoriesMessage,
+  } = useSelector((state) => state.categories);
 
   useEffect(() => {
     dispatch(fetchBlogs());
+    dispatch(fetchCategories());
     return () => {
       dispatch(resetBlogs());
     };
@@ -41,13 +42,12 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchData() {
       dispatch(fetchBlogs());
-      const catRes = await categoriesService.getCategories();
-      setCategories(catRes.data);
+      dispatch(fetchCategories());
     }
     fetchData();
   }, []);
 
-  if (isLoading) {
+  if (isBlogsLoading || isCategoriesLoading) {
     return <Loader />;
   }
 
@@ -62,15 +62,15 @@ export default function HomePage() {
         <CategoriesList categories={categories} />
         <Footer />
         <SuccessToast
-          show={isSuccess}
-          message={message}
+          show={isBlogsSuccess || isCategoriesSuccess}
+          message={blogsMessage || categoriesMessage}
           onClose={() => {
             //setIsSuccess(false);
           }}
         />
         <ErrorToast
-          show={isError}
-          message={message}
+          show={isBlogsError || isCategoriesError}
+          message={blogsMessage || categoriesMessage}
           onClose={() => {
             //setIsError(false);
           }}

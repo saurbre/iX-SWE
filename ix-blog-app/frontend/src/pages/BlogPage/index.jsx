@@ -1,48 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import Categories from "../../components/Categories";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Loader from "../../components/Loader";
 
-import blogsService from "../../services/blogsService";
+import { fetchBlogById, setBlog } from "../../features/blogSlice";
 
 import "./index.css";
 
-// const data = require("../../dummy-data.json");
-// const blogsData = data.blogPosts.reverse();
 
 export default function BlogPage() {
+  const dispatch = useDispatch();
   const { blogId } = useParams();
   const navigate = useNavigate();
-  const [blog, setBlog] = useState();
-  const [loading, setLoading] = useState(true);
+
+  const {
+    blog,
+    isLoading,
+  } = useSelector((state) => state.blogs);
+
 
   useEffect(() => {
-    async function fetchBlog() {
-      setLoading(true);
-      try {
-        const blogRes = await blogsService.fetchBlogById(blogId);
-        setBlog(blogRes.data);
-      } catch (err) {
-        console.error(err);
-      }
-      setLoading(false);
-    }
-    fetchBlog();
-  }, [blogId]);
+    dispatch(fetchBlogById(blogId));
+  }, [dispatch, blogId]);
 
   const navigateToAuthorProfile = () => {
     navigate("/profile");
   };
 
-  if (loading) {
+  if (isLoading || !blog) {
     return <Loader />;
-  }
-
-  if (!blog) {
-    return null;
   }
 
   return (

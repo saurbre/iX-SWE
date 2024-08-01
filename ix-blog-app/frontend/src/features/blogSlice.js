@@ -37,6 +37,18 @@ export const fetchBlogsByCategoryId = createAsyncThunk(
     }
 );
 
+export const fetchBlogById = createAsyncThunk(
+    "blogs/fetchBlogById",
+    async (blogId, thunkAPI) => {
+        try {
+        return await blogService.fetchBlogById(blogId);
+        } catch (error) {
+        const message = error.message || error;
+        return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+
 export const createBlog = createAsyncThunk(
     "blogs/createBlog",
     async (blog, thunkAPI) => {
@@ -75,6 +87,10 @@ export const blogsSlice = createSlice({
 
     setBlogs: (state, action) => {
       state.blogs = action.payload;
+    },
+
+    setBlog: (state, action) => {
+      state.blog = action.payload;
     },
 
     setAddBlog: (state, action) => {
@@ -138,8 +154,25 @@ export const blogsSlice = createSlice({
       state.isError = true;
       state.message = action.payload.message;
     });
+
+    builder.addCase(fetchBlogById.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchBlogById.fulfilled, (state, { payload }) => {
+      state.blog = payload.data;
+      state.isLoading = false;
+      // state.isSuccess = true;
+      state.isError = false;
+      // state.message = payload.message;
+    });
+    builder.addCase(fetchBlogById.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.isSuccess = false;
+      state.message = payload.message;
+    })
   },
 });
 
-export const { reset, resetErrorStatus, setBlogs, setAddBlog, setEditBlog, setDeleteBlog } = blogsSlice.actions;
+export const { reset, resetErrorStatus, setBlogs, setBlog, setAddBlog, setEditBlog, setDeleteBlog } = blogsSlice.actions;
 export default blogsSlice.reducer;
