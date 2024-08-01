@@ -21,42 +21,54 @@ import Loader from "../../components/Loader";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
-import { 
+import {
   setBlogs, 
   setAddBlog, 
   setEditBlog, 
   setDeleteBlog, 
   fetchBlogsByCategoryId,
 } from "../../features/blogSlice";
+import {
+  fetchCategories,
+  setAddCategory,
+  setEditCategory,
+} from "../../features/categorySlice";
 
 export default function BlogsPage() {
   const dispatch = useDispatch();
   const { 
-    blogs, 
-    addBlog, 
-    editBlog, 
+    blogs,  
     deleteBlog, 
-    isLoading, 
-    isSuccess, 
-    isError, 
-    message 
+    isLoading: isBlogLoading,
+    isSuccess: isBlogSuccess,
+    isError: isBlogError,
+    message: blogMessage,
   } = useSelector((state) => state.blogs);
+  const {
+    categories,
+    deleteCategory,
+    editCategory,
+    addCategory,
+    isLoading: isCategoryLoading,
+    isSuccess: isCategorySuccess,
+    isError: isCategoryError,
+    message: categoryMessage,
+  } = useSelector((state) => state.categories);
 
   const { onBlogAdd, createBlog, updateBlog } = useBlogs();
   const { categoryId: initialCategoryId } = useParams();
   const [categoryId, setCategoryId] = useState(initialCategoryId);
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
 
   const user = JSON.parse(localStorage.getItem("user"))
 
   useEffect(() => {
     async function fetchData() {
       dispatch(fetchBlogsByCategoryId(categoryId));
-      const catRes = await categoriesService.getCategories();
-      setCategories(catRes.data);
+      dispatch(fetchCategories());
     }
     fetchData();
-  }, [categoryId]);
+  }, [dispatch, categoryId]);
 
   const onBlogEdit = (blog) => {
     dispatch(setEditBlog(blog));
@@ -82,7 +94,7 @@ export default function BlogsPage() {
   };
 
 
-  if (isLoading) {
+  if (isBlogLoading || isCategoryLoading) {
     return <Loader />;
   }
 
@@ -110,25 +122,21 @@ export default function BlogsPage() {
       </div>
       <Footer />
       <SuccessToast
-        show={isSuccess}
-        message={message}
+        show={isBlogSuccess || isCategorySuccess}
+        message={blogMessage || categoryMessage}
         onClose={() => {
           // dispatch(setIsSuccess(false));
         }}
       />
       <ErrorToast
-        show={isError}
-        message={message}
+        show={isBlogError || isCategoryError}
+        message={blogMessage || categoryMessage}
         onClose={() => {
           // dispatch(setIsError(false));
         }}
       />
       <AddEditBlogModal
-        addBlog={addBlog}
-        editBlog={editBlog}
         categories={categories}
-        createBlog={createBlog}
-        updateBlog={updateBlog}
         onClose={() => {
           dispatch(setAddBlog(null));
           dispatch(setEditBlog(null));

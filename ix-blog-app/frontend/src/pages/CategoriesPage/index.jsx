@@ -13,93 +13,63 @@ import ErrorToast from "../../components/ErrorToast";
 import AddEditCategoryModal from "../../components/AddEditCategoryModal";
 import DeleteCategoryModal from "../../components/DeleteCategoryModal";
 
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchCategories,
+  setAddCategory,
+  setEditCategory,
+  setDeleteCategory,
+} from "../../features/categorySlice";
+
+import useCategories from "../../hooks/useCategories";
+
 
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState();
-  const [loading, setLoading] = useState(false);
-  const [addCategory, setAddCategory] = useState();
-  const [editCategory, setEditCategory] = useState();
-  const [deleteCategory, setDeleteCategory] = useState();
-  const [message, setMessage] = useState();
-  const [isSuccess, setIsSuccess] = useState();
-  const [isError, setIsError] = useState();
+  const dispatch = useDispatch();
+  const { 
+    categories, 
+    addCategory, 
+    editCategory, 
+    deleteCategory, 
+    isLoading, 
+    isSuccess, 
+    isError, 
+    message 
+  } = useSelector((state) => state.categories);
+  // const [categories, setCategories] = useState();
+  // const [loading, setLoading] = useState(false);
+  // const [addCategory, setAddCategory] = useState();
+  // const [editCategory, setEditCategory] = useState();
+  // const [deleteCategory, setDeleteCategory] = useState();
+  // const [message, setMessage] = useState();
+  // const [isSuccess, setIsSuccess] = useState();
+  // const [isError, setIsError] = useState();
 
   const user = JSON.parse(localStorage.getItem("user"))
 
   useEffect(() => {
     const fetchPageData = async () => {
-      try {
-        setLoading(true);
-        const categories = await categoryService.getCategories();
-        setCategories(categories.data);
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
-      }
+      dispatch(fetchCategories());
     };
     fetchPageData();
-  }, []);
+  }, [dispatch]);
 
   const onCategoryAdd = () => {
-    setAddCategory({
+    dispatch(setAddCategory({
       title: "",
       description: "",
       color: "#000000",
-    });
+    }));
   };
 
+  const { createCategory, updateCategory } = useCategories();
+
   const onCategoryUpdate = (category) => {
-    setEditCategory(category);
+    dispatch(setEditCategory(category));
   };
 
   const onCategoryDelete = (category) => {
-    setDeleteCategory(category);
-  };
-
-  const createCategory = async (category) => {
-    try {
-      const newCategory = await categoryService.createCategory(category);
-      setIsSuccess(true);
-      setMessage(newCategory.message);
-      setCategories((prev) => {
-        return [...prev, newCategory.data];
-      });
-    } catch (err) {
-      setIsError(true);
-      setMessage(err);
-    }
-    setAddCategory(null);
-  };
-
-  const updateCategory = async (category) => {
-    try {
-      const updatedCategory = await categoryService.updateCategory(category);
-      setIsSuccess(true);
-      setMessage(updatedCategory.message);
-      setCategories((prev) => {
-        const index = prev.findIndex((x) => x.id === updatedCategory.data.id);
-        prev[index] = updatedCategory.data;
-        return prev;
-      });
-    } catch (err) {
-      setIsError(true);
-      setMessage(err);
-    }
-    setEditCategory(null);
-  };
-
-  const removeCategory = async (category) => {
-    try {
-      const newBlog = await categoryService.deleteCategory(category.id);
-      setIsSuccess(true);
-      setMessage(newBlog.message);
-      setCategories((prev) => prev.filter((x) => x.id !== category.id));
-    } catch (err) {
-      setIsError(true);
-      setMessage(err);
-    }
-    setDeleteCategory(null);
+    dispatch(setDeleteCategory(category));
   };
 
   const AddButton = () => {
@@ -114,7 +84,7 @@ export default function CategoriesPage() {
     return null;
   }
 
-  if (loading) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -146,23 +116,20 @@ export default function CategoriesPage() {
       />
       <DeleteCategoryModal
         deleteCategory={deleteCategory}
-        removeCategory={removeCategory}
+        // removeCategory={removeCategory}
         onClose={() => setDeleteCategory(null)}
       />
       <SuccessToast
         show={isSuccess}
         message={message}
         onClose={() => {
-          setIsSuccess(false);
-          setMessage("");
+
         }}
       />
       <ErrorToast
         show={isError}
         message={message}
         onClose={() => {
-          setIsError(false);
-          setMessage("");
         }}
       />
     </>

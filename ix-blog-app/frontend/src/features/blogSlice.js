@@ -41,10 +41,10 @@ export const createBlog = createAsyncThunk(
     "blogs/createBlog",
     async (blog, thunkAPI) => {
         try {
-        return await blogService.createBlog(blog);
+          return await blogService.createBlog(blog);
         } catch (error) {
-        const message = error.message || error;
-        return thunkAPI.rejectWithValue(message);
+          const message = error.message || error;
+          return thunkAPI.rejectWithValue(message);
         }
     }
 );
