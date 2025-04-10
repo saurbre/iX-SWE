@@ -1,8 +1,9 @@
 const express = require("express");
 const categoriesController = require("../controllers/categoryController");
 
-const router = express.Router();
 const { protect } = require("../middleware/authMiddleware");
+
+const router = express.Router();
 
 router.post("/", protect, (req, res) => {
   categoriesController.createCategories(req, res);

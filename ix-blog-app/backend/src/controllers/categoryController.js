@@ -1,4 +1,4 @@
-const Category = require("../models/categoryModel");
+const Category = require("../models/Category");
 
 const createCategories = async (req, res) => {
   try {
@@ -49,9 +49,12 @@ const updateCategories = async (req, res) => {
 
 const deleteCategories = async (req, res) => {
   try {
-    const dbResponse = await Category.findByIdAndDelete(req.params.id);
+    const categoryId = req.params.id;
+    const dbResponse = await Category.findByIdAndDelete(categoryId);
     if (dbResponse) {
-      return res.status(200).json({ message: "Category deleted!" });
+      return res
+        .status(200)
+        .json({ message: "Category deleted!", data: { id: categoryId } });
     } else {
       return res.status(404).json({ message: "Category not found!" });
     }

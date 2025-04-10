@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 
 const blogRoutes = require("./routes/blogs");
@@ -16,11 +17,14 @@ connectDB();
 app.use(cors());
 
 // Enabling the use of JSON for the body of the request
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use("/api/blogs", blogRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/auth", authRoutes);
+
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.listen(port, () => {
   console.log(`Blog app backend listening on port ${port}`);

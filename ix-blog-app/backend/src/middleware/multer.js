@@ -1,18 +1,26 @@
 const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    let uploadPath;
     switch (req.baseUrl) {
       case "/api/blogs":
-        cb(null, "uploads/blogs/");
+        uploadPath = "uploads/blogs/";
         break;
       case "/api/auth":
-        cb(null, "uploads/users/");
+        uploadPath = "uploads/users/";
         break;
       default:
-        cb(null, "uploads/");
+        uploadPath = "uploads/";
         break;
     }
+
+    // Ensure the directory exists
+    fs.mkdirSync(uploadPath, { recursive: true });
+
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
     let fileExt = file.originalname.split(".").pop();
