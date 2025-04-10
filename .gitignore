@@ -1,3 +1,5 @@
 .DS_Store
 /node_modules
+./node_modules
+ix-blog-app/backend/node_modules
 ix-blog-app/backend/gcp_key.json
