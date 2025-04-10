@@ -20,16 +20,16 @@ export default function FormImage({ image, onChange }) {
         onChange={onChange}
       ></input>
       {image ? (
-        <button
+        <div
           className="image"
           onClick={() => {
             fileInput?.current?.click();
           }}
         >
           <img className="img-upload" src={image} alt="blog.title" />
-        </button>
+        </div>
       ) : (
-        <button
+        <div
           className="image add-image"
           title="Add Image"
           onClick={() => {
@@ -37,7 +37,7 @@ export default function FormImage({ image, onChange }) {
           }}
         >
           <i className="bi bi-plus"></i>
-        </button>
+        </div>
       )}
     </div>
   );

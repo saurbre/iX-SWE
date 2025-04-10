@@ -1,9 +1,9 @@
-import React from 'react'
-import "./index.css";
+import React from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-  const user = JSON.parse(localStorage.getItem("user"))
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   return (
     <nav className="navbar navbar-expand-lg">
@@ -25,20 +25,27 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">
+              <Link className="nav-link active" aria-current="page" to="/home">
                 Home
               </Link>
             </li>
+
+            <li className="nav-item">
+              <Link
+                className="nav-link active"
+                aria-current="page"
+                to="/categories"
+              >
+                Categories
+              </Link>
+            </li>
+
             <li className="nav-item">
               <Link className="nav-link active" aria-current="page" to="/blogs">
                 Blogs
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/categories">
-                Categories
-              </Link>
-            </li>
+
             {user && user.token ? (
               <li className="nav-item">
                 <div className="dropdown">
@@ -53,9 +60,9 @@ export default function Navbar() {
                   <ul className="dropdown-menu">
                     <li>
                       <Link
-                        className="dropdown-item"
+                        className=" dropdown-item"
                         aria-current="page"
-                        to={"/profile"}
+                        to={"/profile/" + user._id}
                       >
                         Profile
                       </Link>

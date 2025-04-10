@@ -1,11 +1,11 @@
 import React from "react";
 
 export default function Loader() {
-    return (
-        <div className="vh-100 d-flex align-items-center justify-content-center">
-          <div className="spinner-border algin-self-center" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-    );
+  return (
+    <div className="d-flex vw-100 vh-100 justify-content-center align-items-center">
+      <div className=" spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  );
 }

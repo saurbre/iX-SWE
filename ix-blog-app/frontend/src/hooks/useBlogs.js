@@ -1,39 +1,50 @@
 import { useDispatch } from "react-redux";
-import { setAddBlog, createBlog, updateBlog } from "../features/blogSlice";
+
+import {
+  createBlog as createBlogAction,
+  updateBlogById,
+  deleteBlogById,
+  setAddBlog,
+} from "../features/blogsSlice";
 
 const useBlogs = () => {
   const dispatch = useDispatch();
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  
-  const onBlogAdd = (blog) => {
-    dispatch(setAddBlog({
-      // image: "",
-      title: "",
-      description: "",
-      categories: [],
-      content: [
-        {
-          sectionHeading: "",
-          sectionText: "",
-        },
-      ],
-      authorId: user._id,
-    }));
+  const onBlogAdd = () => {
+    dispatch(
+      setAddBlog({
+        // image: "",
+        title: "",
+        description: "",
+        categories: [],
+        content: [
+          {
+            sectionHeading: "",
+            sectionText: "",
+          },
+        ],
+        authorId: JSON.parse(localStorage.getItem("user"))?._id,
+      })
+    );
   };
 
   const createBlog = async (blog) => {
-    dispatch(createBlog(blog));
+    dispatch(createBlogAction(blog));
   };
 
   const updateBlog = async (blog) => {
-    dispatch(updateBlog(blog));
+    dispatch(updateBlogById(blog));
+  };
+
+  const removeBlog = async (blog) => {
+    dispatch(deleteBlogById(blog.id));
   };
 
   return {
     onBlogAdd,
     createBlog,
     updateBlog,
+    removeBlog,
   };
 };
 

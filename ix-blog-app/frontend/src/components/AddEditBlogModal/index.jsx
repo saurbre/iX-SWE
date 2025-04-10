@@ -1,34 +1,28 @@
 import React, { useEffect, useMemo, useState } from "react";
-
-import PropTypes from "prop-types";
-
 import { Modal } from "bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { setAddBlog, setEditBlog, createBlog, updateBlog } from "../../features/blogSlice";
 
-import FormImage from "../FormImage";
 import Categories from "../Categories";
+import FormImage from "../FormImage";
 
+import { setAddBlog, setEditBlog } from "../../features/blogsSlice";
 
-export default function AddEditBlogModal({
-  categories,
-  onClose,
-}) {
-  const dispatch = useDispatch();
-  const { 
-    blogs, 
-    addBlog, 
-    editBlog, 
-    deleteBlog, 
-    isLoading, 
-    isSuccess, 
-    isError, 
-    message 
-  } = useSelector((state) => state.blogs);
-  const blog = useSelector((state) => state.blogs.blog);
+import useBlogs from "../../hooks/useBlogs";
+
+export default function AddEditBlogModal() {
   const user = JSON.parse(localStorage.getItem("user"));
+
+  const dispatch = useDispatch();
+  const { createBlog, updateBlog } = useBlogs();
+
+  const { addBlog, editBlog } = useSelector((state) => state.blogs);
+
+  const { categories } = useSelector((state) => state.categories);
+
+  const [blog, setBlog] = useState();
+  const [image, setImage] = useState();
+
   const modalEl = document.getElementById("addEditModal");
-  const [blogImage, setBlogImage] = useState("");
 
   const addEditModal = useMemo(() => {
     return modalEl ? new Modal(modalEl) : null;
@@ -36,10 +30,10 @@ export default function AddEditBlogModal({
 
   useEffect(() => {
     if (addBlog) {
-      dispatch(setAddBlog(addBlog));
+      setBlog(addBlog);
       addEditModal?.show();
     } else if (editBlog) {
-      dispatch(setEditBlog(editBlog));
+      setBlog(editBlog);
       addEditModal?.show();
     }
   }, [addBlog, editBlog, addEditModal]);
@@ -52,40 +46,26 @@ export default function AddEditBlogModal({
     formData.append("description", blog.description);
     formData.append("categories", JSON.stringify(blog.categories));
     formData.append("content", JSON.stringify(blog.content));
-      formData.append("authorId", user?._id);
+    formData.append("authorId", user?._id);
     return formData;
   };
-  
+
   const onSubmit = (e) => {
     e?.preventDefault();
     if (isFormValid()) {
       const blogForm = buildFormData();
       if (addBlog) {
-        dispatch(createBlog(blogForm));
+        createBlog(blogForm);
       } else if (editBlog) {
-        dispatch(updateBlog(blogForm));
+        updateBlog(blogForm);
       }
       resetBlog();
       addEditModal?.hide();
     }
   };
-  
-  const onImageChange = (e) => {
-    if (e?.target?.files?.length) {
-      const file = e.target.files[0];
-      setBlogImage(URL.createObjectURL(file));
-      dispatch(setAddBlog({ ...blog, image: file }));
-    }
-  };
 
   const resetBlog = () => {
-    dispatch(setAddBlog({
-      title: "",
-      description: "",
-      categories: [],
-      content: [],
-      authorId: user?.id,
-    }));
+    setBlog(null);
   };
 
   const isFormValid = () => {
@@ -96,20 +76,28 @@ export default function AddEditBlogModal({
 
   const onCloseModal = () => {
     resetBlog();
-    addEditModal?.hide();
     onClose();
+    addEditModal?.hide();
   };
 
-  if (!categories && !categories?.length) {
-    return null;
-  }
+  const onClose = () => {
+    dispatch(setAddBlog(null));
+    dispatch(setEditBlog(null));
+  };
+
+  const onImageChange = (e) => {
+    if (e?.target?.files?.length) {
+      const file = e.target.files[0];
+      setImage(URL.createObjectURL(file));
+      setBlog({ ...blog, image: file });
+    }
+  };
 
   return (
     <div>
       <div
         className="modal fade"
         id="addEditModal"
-        tabindex="-1"
         aria-labelledby="addEditModalLabel"
         aria-hidden="true"
       >
@@ -128,7 +116,7 @@ export default function AddEditBlogModal({
             </div>
             <div className="modal-body">
               <form id="blogForm">
-              <FormImage image={blogImage} onChange={onImageChange} />
+                <FormImage image={image} onChange={onImageChange} />
                 <div className="input-group mb-3">
                   <label
                     className="input-group-text"
@@ -153,7 +141,7 @@ export default function AddEditBlogModal({
                         ...blog,
                         categories: [...blog.categories, category],
                       };
-                      dispatch(setAddBlog(blogUpdate));
+                      setBlog(blogUpdate);
                     }}
                     required={editBlog ? false : true}
                   >
@@ -168,14 +156,14 @@ export default function AddEditBlogModal({
                 </div>
                 <div className="mb-3">
                   <Categories
-                    categories={blog?.categories}
+                    blog={blog}
                     removeCategory={(category) => {
-                      dispatch(setAddBlog({
+                      setBlog({
                         ...blog,
                         categories: blog?.categories.filter(
                           (x) => x.id !== category.id
                         ),
-                      }));
+                      });
                     }}
                   />
                 </div>
@@ -190,7 +178,7 @@ export default function AddEditBlogModal({
                     id="title"
                     value={blog?.title}
                     onChange={(e) => {
-                      dispatch(setAddBlog({ ...blog, title: e.target.value }));
+                      setBlog({ ...blog, title: e.target.value });
                     }}
                     required
                   />
@@ -206,7 +194,7 @@ export default function AddEditBlogModal({
                     id="description"
                     value={blog?.description}
                     onChange={(e) => {
-                      dispatch(setAddBlog({ ...blog, description: e.target.value }));
+                      setBlog({ ...blog, description: e.target.value });
                     }}
                     required
                   />
@@ -242,7 +230,7 @@ export default function AddEditBlogModal({
                                 return section;
                               }
                             );
-                            dispatch(setAddBlog({ ...blog, content: updatedContent }));
+                            setBlog({ ...blog, content: updatedContent });
                           }}
                           required
                         />
@@ -272,7 +260,7 @@ export default function AddEditBlogModal({
                                 return section;
                               }
                             );
-                            dispatch(setAddBlog({ ...blog, content: updatedContent }));
+                            setBlog({ ...blog, content: updatedContent });
                           }}
                           required
                         />
@@ -302,7 +290,7 @@ export default function AddEditBlogModal({
                           ...blog,
                           content: blog?.content.slice(0, -1),
                         };
-                        dispatch(setAddBlog(blogUpdate));
+                        setBlog(blogUpdate);
                       }}
                     >
                       <i className="bi bi-trash"></i>
@@ -314,11 +302,12 @@ export default function AddEditBlogModal({
                     onClick={() => {
                       const blogUpdate = {
                         ...blog,
-                        content: blog?.content
-                          ? [...blog.content, { sectionHeader: "", sectionText: "" }]
-                        : [{ sectionHeader: "", sectionText: "" }]
+                        content: [
+                          ...blog?.content,
+                          { sectionHeader: "", sectionText: "" },
+                        ],
                       };
-                      dispatch(setAddBlog(blogUpdate));
+                      setBlog(blogUpdate);
                     }}
                   >
                     <i className="bi bi-plus-circle"></i>
@@ -336,7 +325,7 @@ export default function AddEditBlogModal({
               </button>
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-outline-success"
                 onClick={onSubmit}
               >
                 Save changes
@@ -349,11 +338,4 @@ export default function AddEditBlogModal({
   );
 }
 
-AddEditBlogModal.prototype = {
-  addBlog: PropTypes.object,
-  editBlog: PropTypes.object,
-  categories: PropTypes.array,
-  createBlog: PropTypes.func,
-  updateBlog: PropTypes.func,
-  onClose: PropTypes.func,
-};
+AddEditBlogModal.prototype = {};

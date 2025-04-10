@@ -10,10 +10,10 @@ export default function BlogItemText({ headerFontSize, blog }) {
     <div>
       <div style={{ display: "flex" }}>
         <p className="date-author-text">
-          {blog.author ? blog.author.firstName : "Anonymous"} {blog.author ? blog.author.lastName : ""}
+          {blog.author.firstName} {blog.author.lastName}
         </p>
-        <div className="dot-divider"></div>
-        <p className="date-author-text">{blog.createdAt.substring(0, 10)}</p>
+        {/* <div className="dot-divider"></div> */}
+        {/* <p className="date-author-text">{blog.createdAt.substring(0, 10)}</p> */}
       </div>
       <p
         style={{

@@ -22,11 +22,7 @@ export default function DeleteCategoryModal({
   }, [deleteCategory, deleteCategoryModal]);
 
   const resetCategory = () => {
-    setCategory({
-      title: "",
-      description: "",
-      color: "#000000",
-    });
+    setCategory(null);
   };
 
   const onCloseModal = () => {

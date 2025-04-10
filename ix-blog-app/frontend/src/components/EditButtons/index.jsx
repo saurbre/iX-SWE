@@ -1,77 +1,49 @@
-import React from "react";
-
-import PropTypes from "prop-types";
-
-export default function EditButtons({ onEdit, onDelete, onNavigate, className }) {
+export default function EditButtons({ onEdit, onDelete, onNavigate }) {
   return (
-    <>
+    <div
+      style={{
+        backgroundColor: "white",
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+        zIndex: 1,
+        display: "flex",
+        gap: "0px",
+      }}
+    >
       <button
         style={{
-          position: "absolute",
-          top: "10px",
-          right: "60px",
-          border: "none",
-          zIndex: 1,
-          backgroundColor: "transparent",
-          padding: "5px",
           borderRadius: "0%",
+          border: "none",
         }}
         type="button"
-        className={`btn ${className}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          onEdit();
-        }}
+        className="btn"
+        onClick={onEdit}
       >
         <i className="bi bi-pencil-fill"></i>
       </button>
       <button
         style={{
-          position: "absolute",
-          top: "10px",
-          right: "35px",
-          border: "none",
-          zIndex: 1,
-          backgroundColor: "transparent",
-          padding: "5px",
           borderRadius: "0%",
+          border: "none",
         }}
         type="button"
-        className={`btn ${className}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          onDelete();
-        }}
+        className="btn"
+        onClick={onDelete}
       >
         <i className="bi bi-trash-fill"></i>
       </button>
       <button
         style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          border: "none",
-          zIndex: 1,
-          backgroundColor: "transparent",
-          padding: "5px",
           borderRadius: "0%",
+          border: "none",
         }}
         type="button"
-        className={`btn ${className}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          onNavigate();
-        }}
+        className="btn"
+        onClick={onNavigate}
       >
         <i className="bi bi-arrows-fullscreen"></i>
       </button>
-    </>
+    </div>
   );
 }
-
-EditButtons.prototype = {
-  onEdit: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onNavigate: PropTypes.func.isRequired,
-  className: PropTypes.string,
-};

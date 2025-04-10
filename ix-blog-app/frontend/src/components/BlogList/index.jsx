@@ -1,34 +1,41 @@
 import React from "react";
 import BlogItem from "../BlogItem";
-import "./index.css";
-import PropTypes from "prop-types";
 
-export default function BlogList({ blogs, onBlogEdit, onBlogDelete }) {
+import "./index.css";
+import { useDispatch, useSelector } from "react-redux";
+
+import { setEditBlog, setDeleteBlog } from "../../features/blogsSlice";
+
+export default function BlogList() {
+  const dispatch = useDispatch();
+  const { blogs } = useSelector((state) => state.blogs);
+
+  const onBlogEdit = (blog) => {
+    dispatch(setEditBlog(blog));
+  };
+  const onBlogDelete = (blog) => {
+    dispatch(setDeleteBlog(blog));
+  };
+
   if (!blogs || !blogs.length) {
     return null;
   }
 
   return (
-    <div className="blog-list">
+    <div className="blog-grid">
       {blogs?.map((blog, index) => {
         return (
-          <div key={index} id="blog-item">
-            <BlogItem
-              blog={blog}
-              imageOrientation={"top"}
-              onBlogEdit={onBlogEdit}
-              onBlogDelete={onBlogDelete}
-              key={index}
-            />
-          </div>
+          <BlogItem
+            key={index}
+            blog={blog}
+            imageOrientation={"top"}
+            onBlogEdit={onBlogEdit}
+            onBlogDelete={onBlogDelete}
+          />
         );
       })}
     </div>
   );
 }
 
-BlogList.prototype = {
-  blogs: PropTypes.array.isRequired,
-  onBlogEdit: PropTypes.func,
-  onBlogDelete: PropTypes.func,
-};
+BlogList.prototype = {};

@@ -1,42 +1,65 @@
 const createBlog = async (blog) => {
-    const response = await fetch("http://localhost:8000/api/blogs", {
+  try {
+    const res = await fetch("http://localhost:8000/api/blogs", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
+        // "Content-Type": "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("user"))?.token,
       },
-      body: JSON.stringify(blog),
+      body: blog,
     });
-  
-    if (!response.ok) {
-      let res = await response.json();
-      throw res;
+    if (!res.ok) {
+      throw Error(res.statusText);
     }
-  
-    const responseData = await response.json();
-    return responseData;
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    throw Error(err);
+  }
 };
 
-const fetchBlogs = async () => {
-    const response = await fetch("http://localhost:8000/api/blogs", {
+const getBlogs = async () => {
+  try {
+    const res = await fetch("http://localhost:8000/api/blogs", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
-  
-    if (!response.ok) {
-      let res = await response.json();
-      throw res;
+    if (!res.ok) {
+      throw Error(res.statusText);
     }
-  
-    const responseData = await response.json();
-    return responseData;
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    throw Error(err);
+  }
 };
 
-const fetchBlogsByCategoryId = async (categoryId) => {
-    const response = await fetch(
-      "http://localhost:8000/api/blogs/category/" + categoryId,
+const getBlogById = async (id) => {
+  try {
+    const res = await fetch("http://localhost:8000/api/blogs/" + id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      throw Error(res.statusText);
+    }
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    throw Error(err);
+  }
+};
+
+const getBlogsByCategoryId = async (categoryId) => {
+  let categoryIdReq = categoryId ? categoryId : null;
+  try {
+    const res = await fetch(
+      "http://localhost:8000/api/blogs/category/" + categoryIdReq,
       {
         method: "GET",
         headers: {
@@ -44,99 +67,83 @@ const fetchBlogsByCategoryId = async (categoryId) => {
         },
       }
     );
-  
-    if (!response.ok) {
-      let res = await response.json();
-      throw res;
+    if (!res.ok) {
+      throw Error(res.statusText);
     }
-  
-    const responseData = await response.json();
-    return responseData;
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    throw Error(err);
+  }
 };
 
-const fetchBlogById = async (id) => {
-    const response = await fetch("http://localhost:8000/api/blogs/" + id, {
+const getBlogsByAuthorId = async (authorId) => {
+  const response = await fetch(
+    "http://localhost:8000/api/blogs/author/" + authorId,
+    {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-    });
-  
-    if (!response.ok) {
-      let res = await response.json();
-      throw res;
     }
-  
-    const responseData = await response.json();
-    return responseData;
-};
-
-const fetchBlogsByAuthorId = async (authorId) => {
-    const response = await fetch(
-      "http://localhost:8000/api/blogs/author/" + authorId,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-  
-    if (!response.ok) {
-      let res = await response.json();
-      throw res;
-    }
-  
-    const responseData = await response.json();
-    return responseData;
+  );
+  if (!response.ok) {
+    let res = await response.json();
+    throw res;
+  }
+  const responseData = await response.json();
+  return responseData;
 };
 
 const updateBlog = async (blog) => {
-    const response = await fetch("http://localhost:8000/api/blogs/" + blog.id, {
+  try {
+    const res = await fetch("http://localhost:8000/api/blogs/" + blog.id, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
+        //"Content-Type": "application/json",
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("user"))?.token,
       },
-      body: JSON.stringify(blog),
+      body: blog,
     });
-  
-    if (!response.ok) {
-      let res = await response.json();
-      throw res;
+    if (!res.ok) {
+      throw Error(res.statusText);
     }
-  
-    const responseData = await response.json();
-    return responseData;
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    throw Error(err);
+  }
 };
 
-const deleteBlogsById = async (id) => {
-    const response = await fetch("http://localhost:8000/api/blogs/" + id, {
+const deleteBlog = async (id) => {
+  try {
+    const res = await fetch("http://localhost:8000/api/blogs/" + id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("user"))?.token,
       },
     });
-  
-    if (!response.ok) {
-      let res = await response.json();
-      throw res;
+    if (!res.ok) {
+      throw Error(res.statusText);
     }
-  
-    const responseData = await response.json();
-    return responseData;
-  };
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    throw Error(err);
+  }
+};
 
-
-  const blogsService = {
-    createBlog,
-    fetchBlogs,
-    fetchBlogById,
-    fetchBlogsByCategoryId,
-    fetchBlogsByAuthorId,
-    updateBlog,
-    deleteBlogsById,
-  };
+const blogsService = {
+  createBlog,
+  getBlogs,
+  getBlogById,
+  getBlogsByCategoryId,
+  getBlogsByAuthorId,
+  updateBlog,
+  deleteBlog,
+};
 
 export default blogsService;

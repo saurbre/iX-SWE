@@ -4,11 +4,10 @@ import { Toast } from "bootstrap";
 
 export default function SuccessToast({ show, message, onClose }) {
   let [successToast, setSuccessToast] = useState(null);
-
   useEffect(() => {
-    const successEl = document.getElementById("successToast");
-    const successToast = successEl
-      ? new Toast(successEl, {
+    const toastLiveEl = document.getElementById("successToast");
+    const successToast = toastLiveEl
+      ? new Toast(toastLiveEl, {
           autohide: false,
         })
       : null;
@@ -18,7 +17,6 @@ export default function SuccessToast({ show, message, onClose }) {
       setSuccessToast(successToast);
     }
   }, [show]);
-
   return (
     <div className="toast-container position-fixed top-0 end-0 p-3">
       <div

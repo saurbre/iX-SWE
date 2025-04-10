@@ -1,34 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import "./index.css";
 
 import Categories from "../../components/Categories";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+import SuccessToast from "../../components/SuccessToast";
+import ErrorToast from "../../components/ErrorToast";
 import Loader from "../../components/Loader";
 
-import { fetchBlogById, setBlog } from "../../features/blogSlice";
-
-import "./index.css";
-
+import { fetchBlogById, resetSuccessAndError } from "../../features/blogsSlice";
 
 export default function BlogPage() {
-  const dispatch = useDispatch();
   const { blogId } = useParams();
+  const { blog, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.blogs
+  );
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {
-    blog,
-    isLoading,
-  } = useSelector((state) => state.blogs);
-
-
   useEffect(() => {
-    dispatch(fetchBlogById(blogId));
-  }, [dispatch, blogId]);
+    const fetchData = async () => {
+      dispatch(fetchBlogById(blogId));
+    };
+
+    fetchData();
+  }, [blogId]);
 
   const navigateToAuthorProfile = () => {
-    navigate("/profile");
+    navigate("/profile/" + blog.author.id);
   };
 
   if (isLoading || !blog) {
@@ -46,7 +48,7 @@ export default function BlogPage() {
               <div className="my-5">
                 <h2 className="blog-post-title">{blog.title}</h2>
                 <p className="blog-post-meta">
-                  {blog.updatedAt.slice(0, 10)} by{" "}
+                  {/* {blog.updatedAt.slice(0, 10)} by{" "} */}
                   <Link to={"/profile/" + blog.author.id}>
                     {blog.author.firstName} {blog.author.lastName}
                   </Link>
@@ -58,8 +60,8 @@ export default function BlogPage() {
               {blog.content.map((content, index) => {
                 return (
                   <div key={index} className="my-5">
-                    <h2 className="my-3">{content.title}</h2>
-                    <p>{content.text}</p>
+                    <h2 className="my-3">{content.sectionHeader}</h2>
+                    <p>{content.sectionText}</p>
                   </div>
                 );
               })}
@@ -77,6 +79,20 @@ export default function BlogPage() {
         </div>
       </main>
       <Footer />
+      <SuccessToast
+        show={isSuccess}
+        message={message}
+        onClose={() => {
+          dispatch(resetSuccessAndError());
+        }}
+      />
+      <ErrorToast
+        show={isError}
+        message={message}
+        onClose={() => {
+          dispatch(resetSuccessAndError());
+        }}
+      />
     </>
   );
 }

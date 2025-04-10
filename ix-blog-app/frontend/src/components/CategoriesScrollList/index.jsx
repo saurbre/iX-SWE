@@ -1,21 +1,17 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-
 import PropType from "prop-types";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-export default function CategoriesScrollList({
-  categories,
-  categoryId,
-  setCategoryId,
-}) {
+export default function CategoriesScrollList({ categoryId }) {
   const navigate = useNavigate();
+  const { categories } = useSelector((state) => state.categories);
   return categories.map((category, index) => {
     return categoryId === category.id ? (
       <button
         key={index}
         onClick={() => {
-          navigate("/blogs");
-          setCategoryId(null);
+          navigate("/blogs/");
         }}
         style={{ color: "blue" }}
       >
@@ -25,8 +21,7 @@ export default function CategoriesScrollList({
       <button
         key={index}
         onClick={() => {
-          navigate(`/blogs/${category.id}`);
-          setCategoryId(category.id);
+          navigate("/blogs/" + category.id);
         }}
         style={{ color: "black" }}
       >
@@ -37,7 +32,5 @@ export default function CategoriesScrollList({
 }
 
 CategoriesScrollList.prototype = {
-  categories: PropType.array.isRequired,
   categoryId: PropType.string.isRequired,
-  setCategoryId: PropType.func.isRequired,
 };

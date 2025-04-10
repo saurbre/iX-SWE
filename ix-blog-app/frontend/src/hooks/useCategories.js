@@ -1,27 +1,43 @@
 import { useDispatch } from "react-redux";
-import { deleteCategory, createCategory, updateCategory } from "../features/categorySlice";
+
+import {
+  setAddCategory,
+  createCategory as createCategoryAction,
+  updateCategoryById,
+  deleteCategoryById,
+} from "../features/categoriesSlice";
 
 const useCategories = () => {
   const dispatch = useDispatch();
-  const user = JSON.parse(localStorage.getItem("user"));
 
-  const createCategory = async (category) => {
-    dispatch(createCategory(category));
+  const onCategoryAdd = () => {
+    dispatch(
+      setAddCategory({
+        title: "",
+        description: "",
+        color: "",
+      })
+    );
   };
 
-  const updateCategory = async (category) => {
-    dispatch(updateCategory(category));
+  const createCategory = async (blog) => {
+    dispatch(createCategoryAction(blog));
   };
 
-  const deleteCategory = async (category) => {
-    dispatch(deleteCategory(category));
+  const updateCategory = async (blog) => {
+    dispatch(updateCategoryById(blog));
+  };
+
+  const removeCategory = async (blog) => {
+    dispatch(deleteCategoryById(blog));
   };
 
   return {
+    onCategoryAdd,
     createCategory,
     updateCategory,
-    deleteCategory,
+    removeCategory,
   };
-}
+};
 
 export default useCategories;

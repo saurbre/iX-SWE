@@ -1,5 +1,4 @@
 import React from "react";
-import "bootstrap-icons/font/bootstrap-icons.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -10,13 +9,13 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 import "./App.css";
 
-import HomePage from "./pages/HomePage";
-import BlogsPage from "./pages/BlogsPage";
-import CategoriesPage from "./pages/CategoriesPage";
-import BlogPage from "./pages/BlogPage";
-import ProfilePage from "./pages/ProfilePage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
+import HomePage from "./pages/Home";
+import BlogsPage from "./pages/Blogs";
+import CategoriesPage from "./pages/Categories";
+import BlogPage from "./pages/Blog";
+import ProfilePage from "./pages/Profile";
+import LoginPage from "./pages/Login";
+import RegisterPage from "./pages/Register";
 
 const routes = [
   {
@@ -40,7 +39,7 @@ const routes = [
     element: <BlogPage />,
   },
   {
-    path: "/profile",
+    path: "/profile/:authorId",
     element: <ProfilePage />,
   },
   {

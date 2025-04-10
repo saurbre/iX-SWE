@@ -1,10 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
 import "./index.css";
+
 import BlogItem from "../BlogItem";
 
-export default function BlogGrid({ blogs }) {
+export default function BlogGrid() {
+  const { blogs } = useSelector((state) => state.blogs);
+
   if (!blogs || !blogs.length) {
     return null;
   }
@@ -41,6 +45,4 @@ export default function BlogGrid({ blogs }) {
   );
 }
 
-BlogGrid.prototype = {
-  blogs: PropTypes.array.isRequired,
-};
+BlogGrid.prototype = {};
